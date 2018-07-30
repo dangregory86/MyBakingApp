@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MyBakingApp</string>
+    <string name="main_activity_list_item_image_content_description">Image showing the finished recipe.</string>
 </resources>
