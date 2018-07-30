@@ -1,5 +1,6 @@
 package gregory.dan.mybakingapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,15 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     RecyclerView mRecyclerView;
     MyMainRecyclerViewAdapter viewAdapter;
 
+    //TODO implement a database for offline access to instructions
+    //TODO setup the master/detail fragment and remove the dummy items
+    //TODO update the views to match the design
+    //TODO create a widget including a service to move onto the next instruction and displays ingredients list
+    //TODO get the videos working with exoplayer on the detail fragment
+    //TODO use butterknife
+    //TODO setup expresso test files
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
 
     @Override
     public void onClick(int item) {
-
+        Intent intent = new Intent(MainActivity.this, RecipeInstructionListActivity.class);
+        startActivity(intent);
     }
 
 

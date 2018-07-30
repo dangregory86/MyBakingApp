@@ -39,6 +39,7 @@ public class MyMainRecyclerViewAdapter extends RecyclerView.Adapter<MyMainRecycl
             super(itemView);
             recipeImageView = itemView.findViewById(R.id.activity_main_list_item_image_view);
             recipeTextView = itemView.findViewById(R.id.activity_main_list_item_text_view);
+            itemView.setOnClickListener(this);
         }
 
         @Override
