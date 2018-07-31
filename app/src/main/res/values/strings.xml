@@ -3,4 +3,7 @@
     <string name="main_activity_list_item_image_content_description">Image showing the finished recipe.</string>
     <string name="title_recipeinstruction_list">RecipeInstructions</string>
     <string name="title_recipeinstruction_detail">RecipeInstruction Detail</string>
+    <string name="previous_step_button_text">Previous</string>
+    <string name="next_step_button_text">Next</string>
+    <string name="ingredients_detail_activity">Ingredients detail actity</string>
 </resources>

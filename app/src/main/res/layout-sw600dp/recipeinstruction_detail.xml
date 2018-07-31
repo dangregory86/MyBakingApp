@@ -12,7 +12,7 @@
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/exo_player_view"
         android:layout_width="match_parent"
-        android:layout_height="242dp"
+        android:layout_height="451dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/detail_step_text_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="229dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -28,7 +28,7 @@
         app:layout_constraintEnd_toEndOf="@+id/exo_player_view"
         app:layout_constraintStart_toStartOf="@+id/exo_player_view"
         app:layout_constraintTop_toBottomOf="@+id/exo_player_view"
-        tools:text="The thing goes in the whatsit until its tastey and everyone knows what they're eating." />
+        tools:text="The thing goes in the whatsit until its tasty and everyone knows what they're eating." />
 
     <Button
         android:id="@+id/previous_step_button"
@@ -36,12 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/previous_step_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_step_text_view"
-        app:layout_constraintVertical_bias="1.0" />
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/next_step_button"
@@ -49,11 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
         android:text="@string/next_step_button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_step_text_view"
-        app:layout_constraintVertical_bias="1.0" />
+        android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>

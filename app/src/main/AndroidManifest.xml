@@ -20,16 +20,14 @@
         </activity>
         <activity
             android:name=".RecipeInstructionListActivity"
-            android:label="@string/title_recipeinstruction_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_recipeinstruction_list"/>
         <activity
             android:name=".RecipeInstructionDetailActivity"
-            android:label="@string/title_recipeinstruction_detail"
-            android:parentActivityName=".RecipeInstructionListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="gregory.dan.mybakingapp.RecipeInstructionListActivity" />
+            android:label="@string/title_recipeinstruction_detail">
+        </activity>
+        <activity
+            android:name=".IngredientFragmentActivity"
+            android:label="@string/ingredients_detail_activity" >
         </activity>
     </application>
 

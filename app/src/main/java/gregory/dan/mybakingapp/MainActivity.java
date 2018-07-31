@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     MyMainRecyclerViewAdapter viewAdapter;
 
     //TODO implement a database for offline access to instructions
-    //TODO setup the master/detail fragment and remove the dummy items
     //TODO update the views to match the design
     //TODO create a widget including a service to move onto the next instruction and displays ingredients list
     //TODO get the videos working with exoplayer on the detail fragment
@@ -56,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     @Override
     public void onClick(int item) {
         Intent intent = new Intent(MainActivity.this, RecipeInstructionListActivity.class);
+        intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_NAME, mRecipes.get(item).getRecipeName());
+        intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_INGREDIENTS, mRecipes.get(item).getIngredients());
+        intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_STEPS, mRecipes.get(item).getCookingSteps());
         startActivity(intent);
     }
 
@@ -92,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     }
 
     private void setNewData(ArrayList<Recipe> recipes) {
+        mRecipes = recipes;
         viewAdapter.setRecipeData(recipes);
     }
 
