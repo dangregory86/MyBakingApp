@@ -12,12 +12,18 @@ public class CookingStep implements Parcelable {
     private String shortDescription;
     private String description;
     private String videoUrl;
+    private String thumbnailUrl;
 
-    public CookingStep(int stepNumber, String shortDescription, String description, String videoUrl) {
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public CookingStep(int stepNumber, String shortDescription, String description, String videoUrl, String thumbnailUrl) {
         this.stepNumber = stepNumber;
         this.shortDescription = shortDescription;
         this.description = description;
         this.videoUrl = videoUrl;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     protected CookingStep(Parcel in) {
@@ -25,6 +31,7 @@ public class CookingStep implements Parcelable {
         shortDescription = in.readString();
         description = in.readString();
         videoUrl = in.readString();
+        thumbnailUrl = in.readString();
     }
 
     public static final Creator<CookingStep> CREATOR = new Creator<CookingStep>() {
@@ -66,5 +73,6 @@ public class CookingStep implements Parcelable {
         parcel.writeString(shortDescription);
         parcel.writeString(description);
         parcel.writeString(videoUrl);
+        parcel.writeString(thumbnailUrl);
     }
 }

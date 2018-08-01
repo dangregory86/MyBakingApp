@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import gregory.dan.mybakingapp.recipe_objects.Ingredient;
+import gregory.dan.mybakingapp.utilities.MyIngredientRecyclerViewAdapter;
 
 public class IngredientFragment extends Fragment {
 

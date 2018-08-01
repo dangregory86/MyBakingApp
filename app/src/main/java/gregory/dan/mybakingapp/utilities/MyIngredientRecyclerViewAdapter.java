@@ -1,4 +1,4 @@
-package gregory.dan.mybakingapp;
+package gregory.dan.mybakingapp.utilities;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import gregory.dan.mybakingapp.R;
 import gregory.dan.mybakingapp.recipe_objects.Ingredient;
 
 

@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     //TODO implement a database for offline access to instructions
     //TODO update the views to match the design
     //TODO create a widget including a service to move onto the next instruction and displays ingredients list
-    //TODO get the videos working with exoplayer on the detail fragment
     //TODO use butterknife
     //TODO setup expresso test files
 

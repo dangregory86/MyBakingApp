@@ -33,6 +33,7 @@ public class MyJsonParser {
     private final static String STEP_SHORT_DESCRIPTION_KEY = "shortDescription";
     private final static String STEP_DESCRIPTION_KEY = "description";
     private final static String STEP_VIDEO_URL_KEY = "videoURL";
+    private final static String STEP_THUMBNAIL_URL_KEY = "thumbnailURL";
 
     public static ArrayList<Recipe> getRecipesFromJson(Context context, String recipeJson) throws JSONException {
         ArrayList<Recipe> recipes;
@@ -67,8 +68,9 @@ public class MyJsonParser {
                 String shortDescription = stepsObject.getString(STEP_SHORT_DESCRIPTION_KEY);
                 String description = stepsObject.getString(STEP_DESCRIPTION_KEY);
                 String videoUrl = stepsObject.getString(STEP_VIDEO_URL_KEY);
+                String thumbnailUrl = stepsObject.getString(STEP_THUMBNAIL_URL_KEY);
 
-                cookingSteps.add(j, new CookingStep(stepNumber, shortDescription, description, videoUrl));
+                cookingSteps.add(j, new CookingStep(stepNumber, shortDescription, description, videoUrl, thumbnailUrl));
             }
             recipes.add(i, new Recipe(recipeName, recipeServes, ingredients, cookingSteps));
 
