@@ -89,7 +89,7 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
             if (item == 0) {
                 selectedStep = item;
                 Bundle arguments = new Bundle();
-                arguments.putParcelableArrayList(IngredientFragment.INGREDIENTS_LIST_FRAGMENT, mIngredients);
+                arguments.putString(RecipeInstructionListActivity.INTENT_EXTRA_NAME, recipeName);
                 IngredientFragment fragment = new IngredientFragment();
                 fragment.setArguments(arguments);
                 getSupportFragmentManager().beginTransaction()
@@ -111,8 +111,7 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
             if (item == 0) {
                 Context context = this;
                 Intent intent = new Intent(context, IngredientFragmentActivity.class);
-                intent.putExtra(IngredientFragment.INGREDIENTS_LIST_FRAGMENT, mIngredients);
-                intent.putExtra(RecipeInstructionDetailFragment.RECIPE_NAME, recipeName);
+                intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_NAME, recipeName);
 
                 context.startActivity(intent);
             } else {

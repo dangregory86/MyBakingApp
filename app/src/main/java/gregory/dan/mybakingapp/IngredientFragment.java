@@ -1,6 +1,8 @@
 package gregory.dan.mybakingapp;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import gregory.dan.mybakingapp.recipe_objects.Ingredient;
+import gregory.dan.mybakingapp.database.IngredientItem;
+import gregory.dan.mybakingapp.database.IngredientViewModel;
 import gregory.dan.mybakingapp.utilities.MyIngredientRecyclerViewAdapter;
 
 public class IngredientFragment extends Fragment {
 
     public static final String INGREDIENTS_LIST_FRAGMENT = "ingredients";
-    private static ArrayList<Ingredient> ingredients;
+    private  static String recipeName;
+    private static ArrayList<IngredientItem> ingredients;
+    IngredientViewModel ingredientViewModel;
+    MyIngredientRecyclerViewAdapter myIngredientRecyclerViewAdapter;
 
 
     /**
@@ -30,7 +37,8 @@ public class IngredientFragment extends Fragment {
     public static IngredientFragment newInstance(int columnCount) {
         IngredientFragment fragment = new IngredientFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(INGREDIENTS_LIST_FRAGMENT, ingredients);
+//        args.putParcelableArrayList(INGREDIENTS_LIST_FRAGMENT, ingredients);
+        args.putString(RecipeInstructionListActivity.INTENT_EXTRA_NAME, recipeName);
         fragment.setArguments(args);
         return fragment;
     }
@@ -39,9 +47,11 @@ public class IngredientFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ingredientViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
         if (getArguments() != null) {
-            ingredients = getArguments().getParcelableArrayList(INGREDIENTS_LIST_FRAGMENT);
+            recipeName = getArguments().getString(RecipeInstructionListActivity.INTENT_EXTRA_NAME);
         }
+
     }
 
     @Override
@@ -50,17 +60,50 @@ public class IngredientFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView && ingredients != null) {
+        if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-            recyclerView.setAdapter(new MyIngredientRecyclerViewAdapter(ingredients));
+            new GetIngredients(ingredientViewModel).execute();
+            myIngredientRecyclerViewAdapter = new MyIngredientRecyclerViewAdapter(ingredients);
+            recyclerView.setAdapter(myIngredientRecyclerViewAdapter);
         }
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+    }
 
+    private void setTheData(ArrayList<IngredientItem> ingredientItems){
+        myIngredientRecyclerViewAdapter.setData(ingredientItems);
+    }
 
+    private class GetIngredients extends AsyncTask<Void, Void, List<IngredientItem>>{
+
+        IngredientViewModel mIngredientViewModel;
+
+        public GetIngredients(IngredientViewModel ingredientViewModel){
+            mIngredientViewModel = ingredientViewModel;
+        }
+
+        @Override
+        protected List<IngredientItem> doInBackground(Void... voids) {
+            return mIngredientViewModel.getIngredients();
+        }
+
+        @Override
+        protected void onPostExecute(List<IngredientItem> ingredientItems) {
+            ArrayList<IngredientItem> ingredientItems1 = new ArrayList<>();
+            for(IngredientItem ingredientItem: ingredientItems){
+                if(ingredientItem.recipeName.equals(recipeName)){
+                    ingredientItems1.add(ingredientItem);
+                }
+            }
+            ingredients = ingredientItems1;
+            setTheData(ingredients);
+        }
+    }
 }

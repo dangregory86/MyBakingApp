@@ -20,15 +20,26 @@
         </activity>
         <activity
             android:name=".RecipeInstructionListActivity"
-            android:label="@string/title_recipeinstruction_list"/>
+            android:label="@string/title_recipeinstruction_list" />
         <activity
             android:name=".RecipeInstructionDetailActivity"
-            android:label="@string/title_recipeinstruction_detail">
-        </activity>
+            android:label="@string/title_recipeinstruction_detail"></activity>
         <activity
             android:name=".IngredientFragmentActivity"
-            android:label="@string/ingredients_detail_activity" >
-        </activity>
+            android:label="@string/ingredients_detail_activity"></activity>
+
+        <receiver android:name=".RecipeWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
+
+        <service android:name=".service.IngredientLoaderService" />
+        <service android:name=".service.GridWidgetService"/>
     </application>
 
 </manifest>

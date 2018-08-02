@@ -9,14 +9,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import gregory.dan.mybakingapp.R;
-import gregory.dan.mybakingapp.recipe_objects.Ingredient;
+import gregory.dan.mybakingapp.database.IngredientItem;
 
 
 public class MyIngredientRecyclerViewAdapter extends RecyclerView.Adapter<MyIngredientRecyclerViewAdapter.ViewHolder> {
 
-    private final ArrayList<Ingredient> mIngredients;
+    private static ArrayList<IngredientItem> mIngredients;
 
-    public MyIngredientRecyclerViewAdapter(ArrayList<Ingredient> mIngredients) {
+    public MyIngredientRecyclerViewAdapter(ArrayList<IngredientItem> mIngredients) {
         this.mIngredients = mIngredients;
     }
 
@@ -29,31 +29,38 @@ public class MyIngredientRecyclerViewAdapter extends RecyclerView.Adapter<MyIngr
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mIdView.setText(mIngredients.get(position).getMeasure());
-        holder.mContentView.setText(mIngredients.get(position).getIngredient());
+        holder.mIngredientMeasure.setText(mIngredients.get(position).measure);
+        holder.mIngredientText.setText(mIngredients.get(position).ingredient);
+        holder.mIngredientAmount.setText(String.valueOf(mIngredients.get(position).quantity));
 
     }
 
     @Override
     public int getItemCount() {
+        if(mIngredients == null){
+            return 0;
+        }
         return mIngredients.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        public final TextView mIngredientAmount;
+        public final TextView mIngredientMeasure;
+        public final TextView mIngredientText;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIngredientAmount = view.findViewById(R.id.ingridient_list_item_amount);
+            mIngredientMeasure = view.findViewById(R.id.ingridient_list_item_measure);
+            mIngredientText = view.findViewById(R.id.ingredient_list_item_ingredient);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
+    }
+
+    public void setData(ArrayList<IngredientItem> ingredientItems){
+        mIngredients = ingredientItems;
+        notifyDataSetChanged();
     }
 }

@@ -1,5 +1,6 @@
 package gregory.dan.mybakingapp;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import gregory.dan.mybakingapp.database.IngredientItem;
+import gregory.dan.mybakingapp.database.IngredientViewModel;
+import gregory.dan.mybakingapp.recipe_objects.Ingredient;
 import gregory.dan.mybakingapp.recipe_objects.Recipe;
 import gregory.dan.mybakingapp.utilities.MyJsonParser;
 import gregory.dan.mybakingapp.utilities.MyMainRecyclerViewAdapter;
@@ -25,10 +29,9 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     private ArrayList<Recipe> mRecipes;
     RecyclerView mRecyclerView;
     MyMainRecyclerViewAdapter viewAdapter;
+    IngredientViewModel ingredientViewModel;
 
-    //TODO implement a database for offline access to instructions
-    //TODO update the views to match the design
-    //TODO create a widget including a service to move onto the next instruction and displays ingredients list
+    //TODO get widget to show ingredients and to change the list on a button press
     //TODO use butterknife
     //TODO setup expresso test files
 
@@ -88,7 +91,22 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
 
         @Override
         protected void onPostExecute(ArrayList<Recipe> recipes) {
+            addToDatabase(recipes);
             setNewData(recipes);
+        }
+    }
+
+    private void addToDatabase(ArrayList<Recipe> recipes) {
+        ingredientViewModel = ViewModelProviders.of(this).get(IngredientViewModel.class);
+            ingredientViewModel.deleteAll();
+        for(Recipe recipe: recipes){
+            for( Ingredient ingredient: recipe.getIngredients()){
+                IngredientItem ingredientItem = new IngredientItem(recipe.getRecipeName(),
+                        ingredient.getQuantity(),
+                        ingredient.getMeasure(),
+                        ingredient.getIngredient());
+                ingredientViewModel.insertIngredient(ingredientItem);
+            }
         }
     }
 

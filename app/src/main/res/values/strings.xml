@@ -6,4 +6,7 @@
     <string name="previous_step_button_text">Previous</string>
     <string name="next_step_button_text">Next</string>
     <string name="ingredients_detail_activity">Ingredients detail actity</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="next_recipe_button_text">Next Recipe</string>
 </resources>
