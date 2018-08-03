@@ -15,6 +15,9 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
+/*
+* A test to see if the correct data is passed through from the main activity
+*/
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() {

@@ -9,4 +9,14 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="next_recipe_button_text">Next Recipe</string>
+    <string name="no_text">No ingredients to show</string>
+    <string name="select_recipe_button">Select Recipe</string>
+
+    //spinner options
+    <string-array name="recipe_names_spinner_options">
+        <item>Brownies</item>
+        <item>Nutella Pie</item>
+        <item>Yellow Cake</item>
+        <item>Cheesecake</item>
+    </string-array>
 </resources>

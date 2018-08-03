@@ -1,13 +1,18 @@
 package gregory.dan.mybakingapp;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.widget.RemoteViews;
 
-import gregory.dan.mybakingapp.service.IngredientLoaderService;
+import gregory.dan.mybakingapp.service.ListViewService;
+
+import static gregory.dan.mybakingapp.AppWidgetConfig.KEY_RECIPE_SELECTED;
+import static gregory.dan.mybakingapp.AppWidgetConfig.SHARED_PREF;
+import static gregory.dan.mybakingapp.RecipeInstructionDetailFragment.RECIPE_NAME;
 
 /**
  * Implementation of App Widget functionality.
@@ -19,40 +24,31 @@ public class RecipeWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        views.setTextViewText(R.id.app_widget_text_view, "Banana sandwich");
-
-        /*Intent wateringIntent = new Intent(context, PlantWateringService.class);
-wateringIntent.setAction(PlantWateringService.ACTION_WATER_PLANTS);
-PendingIntent wateringPendingIntent = PendingIntent.getService(
-                                             context,
-                                             0,
-                                             wateringIntent,
-                                             PendingIntent.FLAG_UPDATE_CURRENT);
-views.setOnClickPendingIntent(R.id.widget_water_button, wateringPendingIntent);*/
-        Intent nextRecipeIntent = new Intent(context, IngredientLoaderService.class);
-        nextRecipeIntent.putExtra(IngredientLoaderService.ACTION_INTENT_EXTRA_NAME, "Brownie");
-        nextRecipeIntent.setAction(IngredientLoaderService.ACTION_NEXT_RECIPE);
-        PendingIntent nextPendingIntent = PendingIntent.getService(context, 0, nextRecipeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-//        PendingIntent pendingIntent = new PendingIntent();
-
-
-
-
-       views.setOnClickPendingIntent(R.id.app_widget_button, nextPendingIntent);
-
-        // Instruct the widget manager to update the widget
-        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+            String recipe = sharedPreferences.getString(KEY_RECIPE_SELECTED + appWidgetId, "Brownies");
+
+            // Construct the RemoteViews object
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
+            views.setTextViewText(R.id.app_widget_text_view, recipe);
+
+            Intent serviceIntent = new Intent(context, ListViewService.class);
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            serviceIntent.putExtra(RECIPE_NAME, recipe);
+            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            views.setRemoteAdapter(R.id.widget_list_view, serviceIntent);
+            views.setEmptyView(R.id.widget_list_view, R.id.widget_empty_view_text_view);
+
+
+
+            // Instruct the widget manager to update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
 

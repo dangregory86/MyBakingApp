@@ -17,11 +17,11 @@ public class IngredientViewModel extends AndroidViewModel {
     public IngredientViewModel(Application application) {
         super(application);
         ingredientRepository = new IngredientRepository(application);
-        ingredientItems = ingredientRepository.getRecipeIngredients();
+//        ingredientItems = ingredientRepository.getRecipeIngredients();
     }
 
     public List<IngredientItem> getIngredients() {
-        return ingredientItems;
+        return ingredientRepository.getRecipeIngredients();
     }
 
     public void insertIngredient(IngredientItem ingredientItem) {

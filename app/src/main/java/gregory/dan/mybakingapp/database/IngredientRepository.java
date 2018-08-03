@@ -17,7 +17,7 @@ public class IngredientRepository {
     public IngredientRepository(Application application) {
         IngredientDatabase ingredientDatabase = IngredientDatabase.getDatabase(application);
         ingredientDao = ingredientDatabase.ingredientDao();
-        new GetAll(ingredientDao).execute();
+//        new GetAll(ingredientDao).execute();
     }
 
     public void insertIngredient(IngredientItem ingredient) {
@@ -25,7 +25,7 @@ public class IngredientRepository {
     }
 
     public List<IngredientItem> getRecipeIngredients(){
-        return mIngredientItems;
+        return ingredientDao.getIngredients();
     }
 
     public void deleteAll(){
@@ -62,24 +62,24 @@ public class IngredientRepository {
         }
     }
 
-    private static class GetAll extends AsyncTask<Void, Void, List<IngredientItem> >{
-        //get a dao for the async task
-        private IngredientDao aSyncIngredientDao;
-
-        GetAll(IngredientDao dao) {
-            aSyncIngredientDao = dao;
-        }
-
-        @Override
-        protected List<IngredientItem> doInBackground(Void... params) {
-            return aSyncIngredientDao.getIngredients();
-        }
-
-        @Override
-        protected void onPostExecute(List<IngredientItem> ingredientItems) {
-            mIngredientItems = ingredientItems;
-        }
-    }
+//    private static class GetAll extends AsyncTask<Void, Void, List<IngredientItem> >{
+//        //get a dao for the async task
+//        private IngredientDao aSyncIngredientDao;
+//
+//        GetAll(IngredientDao dao) {
+//            aSyncIngredientDao = dao;
+//        }
+//
+//        @Override
+//        protected List<IngredientItem> doInBackground(Void... params) {
+//            return aSyncIngredientDao.getIngredients();
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<IngredientItem> ingredientItems) {
+//            mIngredientItems = ingredientItems;
+//        }
+//    }
 
 
 }

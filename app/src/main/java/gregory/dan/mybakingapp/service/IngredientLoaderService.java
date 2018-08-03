@@ -3,14 +3,7 @@ package gregory.dan.mybakingapp.service;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.annotation.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import gregory.dan.mybakingapp.database.IngredientItem;
-import gregory.dan.mybakingapp.database.IngredientRepository;
 
 /**
  * Created by Daniel Gregory on 02/08/2018.
@@ -41,7 +34,6 @@ public class IngredientLoaderService extends IntentService {
 
     private void handleActionNextRecipe(String recipeName) {
 
-        new MyNetworkTasker(recipeName).execute();
 
     }
 
@@ -51,34 +43,5 @@ public class IngredientLoaderService extends IntentService {
         context.startService(intent);
     }
 
-    public class MyNetworkTasker extends AsyncTask<String, Void, List<IngredientItem>> {
 
-        IngredientRepository ingredientRepository;
-        String recipeName;
-
-        public MyNetworkTasker(String mRecipeName) {
-            ingredientRepository = new IngredientRepository(getApplication());
-            recipeName = mRecipeName;
-        }
-
-
-        @Override
-        protected List<IngredientItem> doInBackground(String... params) {
-            return ingredientRepository.getRecipeIngredients();
-        }
-
-        @Override
-        protected void onPostExecute(List<IngredientItem> recipes) {
-
-            ArrayList<IngredientItem> ingredientItems = new ArrayList<>();
-            for(IngredientItem ingredientItem: recipes){
-                if(ingredientItem.recipeName.equalsIgnoreCase(recipeName)){
-                    ingredientItems.add(ingredientItem);
-                }
-            }
-
-            ListViewService.updateData(ingredientItems);
-
-        }
-    }
 }

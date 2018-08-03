@@ -31,11 +31,6 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     MyMainRecyclerViewAdapter viewAdapter;
     IngredientViewModel ingredientViewModel;
 
-    //TODO get widget to show ingredients and to change the list on a button press
-    //TODO use butterknife
-    //TODO setup expresso test files
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
