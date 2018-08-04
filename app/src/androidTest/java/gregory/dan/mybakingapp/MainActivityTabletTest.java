@@ -65,28 +65,6 @@ public class MainActivityTabletTest {
                         isDisplayed()));
         textView.check(matches(withText("Recipe Introduction")));
 
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.content), withText("Starting prep"),
-                        childAtPosition(
-                                allOf(withId(R.id.step_list_item),
-                                        childAtPosition(
-                                                withId(R.id.recipeinstruction_list),
-                                                2)),
-                                0),
-                        isDisplayed()));
-        textView2.check(matches(withText("Starting prep")));
-
-        ViewInteraction textView3 = onView(
-                allOf(withId(R.id.content), withText("Starting prep"),
-                        childAtPosition(
-                                allOf(withId(R.id.step_list_item),
-                                        childAtPosition(
-                                                withId(R.id.recipeinstruction_list),
-                                                2)),
-                                0),
-                        isDisplayed()));
-        textView3.check(matches(withText("Starting prep")));
-
         ViewInteraction recyclerView2 = onView(
                 allOf(withId(R.id.recipeinstruction_list),
                         childAtPosition(
@@ -100,16 +78,6 @@ public class MainActivityTabletTest {
                                 withClassName(is("android.widget.LinearLayout")),
                                 0)));
         recyclerView3.perform(actionOnItemAtPosition(2, click()));
-
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.detail_step_text_view), withText("1. Preheat the oven to 350�F. Butter the bottom and sides of a 9\"x13\" pan."),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.recipeinstruction_detail_container),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView4.check(matches(isDisplayed()));
 
         ViewInteraction appCompatImageButton = onView(
                 allOf(withContentDescription("Navigate up"),
