@@ -19,14 +19,20 @@
             </intent-filter>
         </activity>
         <activity
+            android:launchMode="singleTop"
             android:name=".RecipeInstructionListActivity"
-            android:label="@string/title_recipeinstruction_list" />
+            android:label="@string/title_recipeinstruction_list"
+            android:parentActivityName=".MainActivity"/>
         <activity
+            android:launchMode="singleInstance"
             android:name=".RecipeInstructionDetailActivity"
-            android:label="@string/title_recipeinstruction_detail" />
+            android:label="@string/title_recipeinstruction_detail"
+            android:parentActivityName=".RecipeInstructionListActivity"/>
         <activity
+            android:launchMode="singleTop"
             android:name=".IngredientFragmentActivity"
-            android:label="@string/ingredients_detail_activity" />
+            android:label="@string/ingredients_detail_activity"
+            android:parentActivityName=".RecipeInstructionListActivity"/>
 
         <receiver android:name=".RecipeWidget">
             <intent-filter>

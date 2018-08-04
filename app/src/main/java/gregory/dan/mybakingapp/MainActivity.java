@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements MyMainRecyclerVie
     public void onClick(int item) {
         Intent intent = new Intent(MainActivity.this, RecipeInstructionListActivity.class);
         intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_NAME, mRecipes.get(item).getRecipeName());
-        intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_INGREDIENTS, mRecipes.get(item).getIngredients());
         intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_STEPS, mRecipes.get(item).getCookingSteps());
         startActivity(intent);
     }

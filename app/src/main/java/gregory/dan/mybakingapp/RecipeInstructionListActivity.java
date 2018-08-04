@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import java.util.ArrayList;
 
 import gregory.dan.mybakingapp.recipe_objects.CookingStep;
-import gregory.dan.mybakingapp.recipe_objects.Ingredient;
 import gregory.dan.mybakingapp.utilities.InstructionViewAdapter;
 
 public class RecipeInstructionListActivity extends AppCompatActivity implements InstructionViewAdapter.ListItemClickListener {
@@ -19,9 +18,10 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
     public final static String INTENT_EXTRA_INGREDIENTS = "Ingredients";
     public final static String INTENT_EXTRA_STEPS = "steps";
     public final static String INTENT_EXTRA_NAME = "name";
+    public static final String SELECTED_STEP = "selected_step";
+    public static final String TWO_PANE_BOOLEAN = "two_pane_boolean";
 
     private boolean mTwoPane;
-    public ArrayList<Ingredient> mIngredients;
     public ArrayList<CookingStep> mSteps;
     public String recipeName;
     private int selectedStep;
@@ -38,27 +38,32 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
 
         Intent intent = getIntent();
         if (intent != null) {
-            mIngredients = intent.getParcelableArrayListExtra(INTENT_EXTRA_INGREDIENTS);
             mSteps = intent.getParcelableArrayListExtra(INTENT_EXTRA_STEPS);
             recipeName = intent.getStringExtra(INTENT_EXTRA_NAME);
+            selectedStep = intent.getIntExtra(SELECTED_STEP, 0);
         }
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(recipeName);
-        if(savedInstanceState == null){
-            selectedStep =0;
-
-        }else{
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(savedInstanceState != null){
             selectedStep = savedInstanceState.getInt("current_item");
-
         }
 
         if (findViewById(R.id.recipeinstruction_detail_container) != null) {
             mTwoPane = true;
-            onClick(selectedStep);
+            if(savedInstanceState == null){
+                Bundle arguments = new Bundle();
+                arguments.putString(RecipeInstructionListActivity.INTENT_EXTRA_NAME, recipeName);
+                IngredientFragment fragment = new IngredientFragment();
+                fragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.recipeinstruction_detail_container, fragment)
+                        .commit();
+            }
         }
         assert mRecyclerView != null;
-        setupRecyclerView((RecyclerView) mRecyclerView);
+        setupRecyclerView(mRecyclerView);
 
 
 
@@ -100,6 +105,7 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
                 Bundle arguments = new Bundle();
                 arguments.putParcelableArrayList(RecipeInstructionDetailFragment.ARG_ITEM_ID, mSteps);
                 arguments.putInt(RecipeInstructionDetailFragment.RECIPE_STEP, item - 1);
+                arguments.putBoolean(TWO_PANE_BOOLEAN, mTwoPane);
                 RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
                 fragment.setArguments(arguments);
                 getSupportFragmentManager().beginTransaction()
@@ -112,7 +118,8 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
                 Context context = this;
                 Intent intent = new Intent(context, IngredientFragmentActivity.class);
                 intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_NAME, recipeName);
-
+                intent.putExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID, mSteps);
+                intent.putExtra(SELECTED_STEP, item);
                 context.startActivity(intent);
             } else {
                 Context context = this;
@@ -120,7 +127,7 @@ public class RecipeInstructionListActivity extends AppCompatActivity implements 
                 intent.putExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID, mSteps);
                 intent.putExtra(RecipeInstructionDetailFragment.RECIPE_STEP, item - 1);
                 intent.putExtra(RecipeInstructionDetailFragment.RECIPE_NAME, recipeName);
-
+                intent.putExtra(SELECTED_STEP, item);
                 context.startActivity(intent);
             }
         }

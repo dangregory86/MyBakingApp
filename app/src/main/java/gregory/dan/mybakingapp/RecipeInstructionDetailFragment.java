@@ -49,6 +49,7 @@ public class RecipeInstructionDetailFragment extends Fragment {
     SimpleExoPlayer player;
     Uri videoUri;
     long position;
+    boolean playing, twoPane;
 
 
     public RecipeInstructionDetailFragment() {
@@ -58,31 +59,35 @@ public class RecipeInstructionDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         position = C.TIME_UNSET;
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mCookingStep = savedInstanceState.getParcelableArrayList("current_recipe");
             cookingStepNumber = savedInstanceState.getInt("current_step");
             position = savedInstanceState.getLong("selected_position", C.TIME_UNSET);
-        }else{
+            playing = savedInstanceState.getBoolean("playing", true);
+            twoPane = savedInstanceState.getBoolean("two_pane", false);
+        } else {
             mCookingStep = getArguments().getParcelableArrayList(ARG_ITEM_ID);
             cookingStepNumber = getArguments().getInt(RECIPE_STEP);
+            twoPane = getArguments().getBoolean(RecipeInstructionListActivity.TWO_PANE_BOOLEAN, false);
+            playing = true;
         }
 
-
         activity = this.getActivity();
+        if (player == null) {
+            // 1. Create a default TrackSelector
+            Handler mainHandler = new Handler();
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+            DefaultTrackSelector trackSelector =
+                    new DefaultTrackSelector(videoTrackSelectionFactory);
 
-        // 1. Create a default TrackSelector
-        Handler mainHandler = new Handler();
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        DefaultTrackSelector trackSelector =
-                new DefaultTrackSelector(videoTrackSelectionFactory);
-
-        // 2. Create the player
-        player =
-                ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
-
+            // 2. Create the player
+            player =
+                    ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+        }
 
     }
 
@@ -91,10 +96,9 @@ public class RecipeInstructionDetailFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt("current_step", cookingStepNumber);
         outState.putParcelableArrayList("current_recipe", mCookingStep);
-        if(player != null){
-            outState.putLong("selected_position", position);
-        }
-
+        outState.putLong("selected_position", position);
+        outState.putBoolean("playing", playing);
+        outState.putBoolean("two_pane", twoPane);
     }
 
     @Override
@@ -106,6 +110,7 @@ public class RecipeInstructionDetailFragment extends Fragment {
         nextButton = rootView.findViewById(R.id.next_step_button);
         detailsTextView = rootView.findViewById(R.id.detail_step_text_view);
         simpleExoPlayerView = rootView.findViewById(R.id.exo_player_view);
+
 
         // Show the dummy content as text in a TextView.
         if (mCookingStep != null) {
@@ -167,13 +172,17 @@ public class RecipeInstructionDetailFragment extends Fragment {
             }
         } else {
             if (!mCookingStep.get(cookingStepNumber).getVideoUrl().equals("")) {
-                getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                if(!twoPane) {
+                    getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                }
                 simpleExoPlayerView.setVisibility(View.VISIBLE);
                 hideButtons();
                 videoUri = Uri.parse(mCookingStep.get(cookingStepNumber).getVideoUrl());
                 playVideo(videoUri);
             } else if (!mCookingStep.get(cookingStepNumber).getThumbnailUrl().equals("")) {
-                getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                if(!twoPane) {
+                    getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE);
+                }
                 simpleExoPlayerView.setVisibility(View.VISIBLE);
                 hideButtons();
                 videoUri = Uri.parse(mCookingStep.get(cookingStepNumber).getThumbnailUrl());
@@ -189,7 +198,7 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
     }
 
-    private void hideButtons(){
+    private void hideButtons() {
         nextButton.setVisibility(View.GONE);
         previousButton.setVisibility(View.GONE);
         detailsTextView.setVisibility(View.GONE);
@@ -204,25 +213,32 @@ public class RecipeInstructionDetailFragment extends Fragment {
                 .createMediaSource(videoUri);
         // Prepare the player with the source.
         player.prepare(videoSource);
-        if(position != C.TIME_UNSET){
-            player.seekTo(position);
+        if (position != C.TIME_UNSET) {
+        player.seekTo(position);
         }
-        player.setPlayWhenReady(true);
+        player.setPlayWhenReady(playing);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(player != null){
+        if (player != null) {
             position = player.getCurrentPosition();
+            playing = player.getPlayWhenReady();
             player.setPlayWhenReady(false);
+            player.stop();
+            player.release();
+            player = null;
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(player != null){
+        if (player != null) {
+            position = player.getCurrentPosition();
+            playing = player.getPlayWhenReady();
+            player.setPlayWhenReady(false);
             player.stop();
             player.release();
             player = null;
@@ -232,6 +248,23 @@ public class RecipeInstructionDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        player.setPlayWhenReady(true);
+        if (player == null) {
+            // 1. Create a default TrackSelector
+            Handler mainHandler = new Handler();
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelection.Factory videoTrackSelectionFactory =
+                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+            DefaultTrackSelector trackSelector =
+                    new DefaultTrackSelector(videoTrackSelectionFactory);
+
+            // 2. Create the player
+            player =
+                    ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+            simpleExoPlayerView.setPlayer(player);
+
+            checkAndPlayVideo();
+        }
+
+        player.setPlayWhenReady(playing);
     }
 }

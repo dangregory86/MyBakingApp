@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
     public ArrayList<CookingStep> mSteps;
     public int cookingStepNumber;
     public String recipeName;
-    public static final String TITLE_TEXT = " - Step number: ";
+    public int selected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipeinstruction_detail);
 
         ActionBar actionBar = getSupportActionBar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         if (savedInstanceState == null) {
@@ -35,6 +37,7 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
             mSteps = intent.getParcelableArrayListExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID);
             cookingStepNumber = intent.getIntExtra(RecipeInstructionDetailFragment.RECIPE_STEP, 0);
             recipeName = intent.getStringExtra(RecipeInstructionDetailFragment.RECIPE_NAME);
+            selected = intent.getIntExtra(RecipeInstructionListActivity.SELECTED_STEP, 1);
             actionBar.setTitle(recipeName);
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
@@ -50,4 +53,17 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(this, RecipeInstructionListActivity.class);
+                intent.putExtra(RecipeInstructionListActivity.SELECTED_STEP, selected);
+                intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_NAME, recipeName);
+                intent.putExtra(RecipeInstructionListActivity.INTENT_EXTRA_STEPS, mSteps);
+                startActivity(intent);
+                break;
+        }
+        return true;
+    }
 }
